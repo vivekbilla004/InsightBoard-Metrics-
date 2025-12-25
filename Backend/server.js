@@ -32,7 +32,7 @@ app.set("io", io);
 // middlewares
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: "Client_URL",
 }));
 
 app.use(requestLogger);
