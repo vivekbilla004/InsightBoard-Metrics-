@@ -8,6 +8,7 @@ const requestLogger = require("./middleware/requestLogger");
 const chartsRoute = require("./routes/charts");
 const logsRoute = require("./routes/logs");
 const metricsRoute = require("./routes/metrics");
+const authRoute = require("./routes/auth");
 
 dotenv.config();
 connectDB();
@@ -55,6 +56,8 @@ app.get("/api/error-test", (req, res) => {
 // charts route
 app.use("/api/charts", chartsRoute);
 
+// auth route
+app.use("/api/auth", authRoute);
 
 // socket connection
 io.on("connection", (socket) => {

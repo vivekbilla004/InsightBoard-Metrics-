@@ -1,16 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const RequestLog = require("../models/RequestLog");
+const { protect, restrictTo } = require("../middleware/auth");
 
 // GET logs with pagination & filters
-router.get("/", async (req, res) => {
+router.get("/", protect, restrictTo("admin"), async (req, res) => {
   try {
-    const {
-      page = 1,
-      limit = 10,
-      status,
-      method
-    } = req.query;
+    const { page = 1, limit = 10, status, method } = req.query;
 
     const query = {};
 
@@ -24,23 +20,22 @@ router.get("/", async (req, res) => {
 
     const total = await RequestLog.countDocuments(query);
 
-    const formattedLogs = logs.map(log => ({
+    const formattedLogs = logs.map((log) => ({
       id: log._id,
       method: log.method,
       url: log.url,
       status: log.status,
       responseTime: log.responseTime,
       ip: log.ip,
-      localTime: new Date(log.createdAt).toLocaleString("en-IN")
+      localTime: new Date(log.createdAt).toLocaleString("en-IN"),
     }));
 
     res.json({
       total,
       page: Number(page),
       pages: Math.ceil(total / limit),
-      logs: formattedLogs
+      logs: formattedLogs,
     });
-
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch logs" });
   }
