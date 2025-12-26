@@ -12,6 +12,7 @@ import AlertBanner from "../Components/AlertBanner";
 import TrafficChart from "../Components/TrafficChart";
 import ErrorChart from "../Components/ErrorChart";
 import Header from "../Components/Header";
+import UserManagement from "../Components/UserManagement";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
@@ -19,9 +20,8 @@ const Dashboard = () => {
   const [alerts, setAlerts] = useState([]);
   const [traffic, setTraffic] = useState([]);
   const [errors, setErrors] = useState([]);
- const role = localStorage.getItem("role");
-
-{role === "admin" && <AlertBanner />}
+  const [tab, setTab] = useState("overview");
+  const role = localStorage.getItem("role");
 
   // 🔐 prevents API from overwriting realtime logs
   const isInitialLoadDone = useRef(false);
@@ -111,20 +111,66 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-100 px-6 py-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <Header />
+    <div className="flex-col min-h-screen bg-slate-100 px-6 py-6">
+  <div className="max-w-7xl mx-auto space-y-6">
+    
+    <Header />
+
+    {/* Navigation */}
+    <div className="flex gap-6 ">
+      <button onClick={() => setTab("overview")} className="px-4 py-2 bg-gray-200 rounded">Overview</button>
+      <button onClick={() => setTab("logs")} className="px-4 py-2 bg-gray-200 rounded">Logs</button>
+      <button onClick={() => setTab("charts")} className="px-4 py-2 bg-gray-200 rounded">Charts</button>
+
+      {role === "admin" && (
+        <button onClick={() => setTab("users")} className="px-4 py-2 bg-gray-200 rounded">
+          User Management
+        </button>
+      )}
+    </div>
+
+    {/* Content */}
+    {/* {tab === "overview" && (
+      <>
         <MetricsCards data={overview} />
-        <LogsTable logs={logs} />
-        <AlertBanner alerts={alerts} />
+      </>
+    )} */}
+    <MetricsCards data={overview} />
+    {tab === "logs" && <LogsTable logs={logs} />}
+
+    {tab === "charts" && (
+      <>
         <TrafficChart data={traffic} />
         <ErrorChart data={errors} />
-        {/* Header */}
-        {/* Metrics */}
-        {/* Charts */}
-        {/* Logs */}
-      </div>
-    </div>
+      </>
+    )}
+
+    {tab === "users" && role === "admin" && (
+      <UserManagement />
+    )}
+  </div>
+</div>
+
+  //   <div className="min-h-screen bg-slate-100 px-6 py-6">
+  //     <div className="max-w-7xl mx-auto space-y-6">
+  //       {/* {role === "admin" && <UserManagement />} */}
+  //       <Header />
+  //         {role === "admin" && (
+  //   <button onClick={() => setTab("users")}>
+  //     User Management
+  //   </button>
+  // )}
+  //       <MetricsCards data={overview} />
+  //       <LogsTable logs={logs} />
+  //       <AlertBanner alerts={alerts} />
+  //       <TrafficChart data={traffic} />
+  //       <ErrorChart data={errors} />
+  //       {/* Header */}
+  //       {/* Metrics */}
+  //       {/* Charts */}
+  //       {/* Logs */}
+  //     </div>
+  //   </div>
 
     // <div className="min-h-screen bg-gray-100 p-8">
     //   <h2 className="text-2xl font-bold mb-6">InsightBoard Dashboard</h2>
