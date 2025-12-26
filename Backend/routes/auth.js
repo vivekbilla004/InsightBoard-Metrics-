@@ -14,6 +14,12 @@ router.post("/login", async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
+  if (!user.isActive) {
+    return res.status(403).json({
+      message: "Account deactivated. Contact admin.",
+    });
+  }
+
   const token = jwt.sign(
     { id: user._id, role: user.role },
     process.env.JWT_SECRET,
@@ -22,7 +28,31 @@ router.post("/login", async (req, res) => {
 
   res.json({
     token,
-    role: user.role
+    role: user.role,
+  });
+});
+
+// Register route - only allows developer role registration
+router.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  // prevent duplicate users
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    role: "developer", // 🔒 force developer role
+  });
+
+  res.status(201).json({
+    message: "Account created successfully",
   });
 });
 
@@ -41,16 +71,14 @@ router.post("/seed-admin", async (req, res) => {
     name: "Admin",
     email: "admin@insightboard.com",
     password: hashedPassword,
-    role: "admin"
+    role: "admin",
   });
 
   res.json({
     message: "Admin created",
     email: admin.email,
-    password: "admin123"
+    password: "admin123",
   });
 });
-
-
 
 module.exports = router;

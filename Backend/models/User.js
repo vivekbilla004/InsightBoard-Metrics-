@@ -8,8 +8,21 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["admin", "developer"],
-      default: "developer"
-    }
+      default: "developer",
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    title: {
+      type: String, // e.g. Backend Developer, SRE
+      default: "Developer",
+    },
+    status: {
+      type: String,
+      enum: ["Active", "Suspended"],
+      default: "Active",
+    },
   },
   { timestamps: true }
 );

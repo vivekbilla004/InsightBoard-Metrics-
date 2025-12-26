@@ -9,6 +9,7 @@ const chartsRoute = require("./routes/charts");
 const logsRoute = require("./routes/logs");
 const metricsRoute = require("./routes/metrics");
 const authRoute = require("./routes/auth");
+const usersRoute = require("./routes/users");
 
 dotenv.config();
 connectDB();
@@ -63,6 +64,9 @@ app.use("/api/charts", chartsRoute);
 
 // auth route
 app.use("/api/auth", authRoute);
+
+// users route
+app.use("/api/users", usersRoute);
 
 // socket connection
 io.on("connection", (socket) => {
