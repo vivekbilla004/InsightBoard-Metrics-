@@ -11,6 +11,7 @@ import LogsTable from "../Components/LogTable";
 import AlertBanner from "../Components/AlertBanner";
 import TrafficChart from "../Components/TrafficChart";
 import ErrorChart from "../Components/ErrorChart";
+import Header from "../Components/Header";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
@@ -18,6 +19,9 @@ const Dashboard = () => {
   const [alerts, setAlerts] = useState([]);
   const [traffic, setTraffic] = useState([]);
   const [errors, setErrors] = useState([]);
+ const role = localStorage.getItem("role");
+
+{role === "admin" && <AlertBanner />}
 
   // 🔐 prevents API from overwriting realtime logs
   const isInitialLoadDone = useRef(false);
@@ -107,20 +111,35 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h2 className="text-2xl font-bold mb-6">InsightBoard Dashboard</h2>
-
-      <MetricsCards data={overview} />
-
-      <div className="mt-6">
+    <div className="min-h-screen bg-slate-100 px-6 py-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <Header />
+        <MetricsCards data={overview} />
         <LogsTable logs={logs} />
-      </div>
-      <AlertBanner alerts={alerts} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <AlertBanner alerts={alerts} />
         <TrafficChart data={traffic} />
         <ErrorChart data={errors} />
+        {/* Header */}
+        {/* Metrics */}
+        {/* Charts */}
+        {/* Logs */}
       </div>
     </div>
+
+    // <div className="min-h-screen bg-gray-100 p-8">
+    //   <h2 className="text-2xl font-bold mb-6">InsightBoard Dashboard</h2>
+
+    //   <MetricsCards data={overview} />
+
+    //   <div className="mt-6">
+    //     <LogsTable logs={logs} />
+    //   </div>
+    //   <AlertBanner alerts={alerts} />
+    //   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    //     <TrafficChart data={traffic} />
+    //     <ErrorChart data={errors} />
+    //   </div>
+    // </div>
   );
 };
 
