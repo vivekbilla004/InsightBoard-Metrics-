@@ -1,37 +1,37 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
 
-// METRICS & LOGS FETCHERS
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
+  };
+};
+
+// Metrics
 export const fetchOverview = async () => {
-  const res = await fetch(`${BASE_URL}/api/metrics/overview`);
-  return res.json();
+  return fetch(`${BASE_URL}/api/metrics/overview`, {
+    headers: getAuthHeaders()
+  }).then(res => res.json());
 };
 
-export const fetchLogs = async () => {
-  const res = await fetch(`${BASE_URL}/api/logs?limit=10`);
-  return res.json();
+// Logs (ADMIN)
+export const fetchLogs = async (limit = 10) => {
+  return fetch(`${BASE_URL}/api/logs?limit=${limit}`, {
+    headers: getAuthHeaders()
+  }).then(res => res.json());
 };
 
+// Charts
 export const fetchTraffic = async () => {
-  const res = await fetch(`${BASE_URL}/api/charts/traffic`);
-  return res.json();
+  return fetch(`${BASE_URL}/api/charts/traffic`, {
+    headers: getAuthHeaders()
+  }).then(res => res.json());
 };
 
 export const fetchErrors = async () => {
-  const res = await fetch(`${BASE_URL}/api/charts/errors`);
-  return res.json();
-};
-
-// AUTHENTICATED REQUEST HELPER
-export const fetchWithAuth = async (url, options = {}) => {
-  const token = localStorage.getItem("token");
-
-  return fetch(`${BASE_URL}${url}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
-      ...(options.headers || {}),
-    },
-  });
+  return fetch(`${BASE_URL}/api/charts/errors`, {
+    headers: getAuthHeaders()
+  }).then(res => res.json());
 };
