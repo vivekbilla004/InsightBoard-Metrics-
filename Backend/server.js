@@ -23,8 +23,8 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
     origin: CLIENT_URL,
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
 // make io globally accessible
@@ -32,9 +32,14 @@ app.set("io", io);
 
 // middlewares
 app.use(express.json());
-app.use(cors({
-  origin: "Client_URL",
-}));
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 app.use(requestLogger);
 
@@ -46,7 +51,7 @@ app.get("/", (req, res) => {
 app.use("/api/logs", logsRoute);
 
 //metrics route
-app.use("/api/metrics",metricsRoute);
+app.use("/api/metrics", metricsRoute);
 
 // route to force an error for testing
 app.get("/api/error-test", (req, res) => {
@@ -68,7 +73,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
