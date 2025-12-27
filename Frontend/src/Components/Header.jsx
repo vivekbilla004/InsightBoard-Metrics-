@@ -7,27 +7,21 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <div className="flex items-center justify-between">
-      <div>
-        <h1 className="text-xl font-semibold text-white rounded-xl bg-blue-700 p-2">
+    <div className="flex justify-between items-center p-2 h-30  bg-[#1f2228]  border-white/10">
+      <div className="flex flex-col ml-4">
+        <h1 className="text-xl mt-2 font-semibold text-white rounded-xl bg-blue-700 p-2">
           InsightBoard Metrics
         </h1>
-        <p className="text-sm text-black p-2">
+        <p className="text-sm text-grey p-2">
           Real-time backend observability
         </p>
       </div>
 
-      <div className="flex gap-1">
-        <span onClick={handleLogout} className="px-3 py-1 text-xs rounded-full bg-black-100 text-red-700 cursor-pointer hover:bg-red-200 hover:text-red-800">
+      <div className="flex gap-1 mr-10">
+        <span onClick={handleLogout} className="px-3 py-1 text-shadow-md font-semibold rounded-full bg-black-100 text-red-700 cursor-pointer hover:bg-red-200 hover:text-red-800">
           Logout
         </span>
-        {/* <button
-          onClick={handleLogout}
-          className="text-sm text-red-600 hover:underline"
-        >
-          Logout
-        </button> */}
-        <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
+        <span className="px-3 py-1 text-shadow-md font-medium rounded-full bg-green-100 text-green-700">
           ● Live
         </span>
       </div>

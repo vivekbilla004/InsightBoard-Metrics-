@@ -5,7 +5,7 @@ import {
 const TrafficChart = ({ data }) => {
   return (
     <div className="bg-white p-6 m-2 rounded-xl shadow">
-      <h3 className="font-semibold mb-4">Requests (Last 10 min)</h3>
+      <h3 className="font-semibold text-gray-800 mb-4">Requests (Last 10 min)</h3>
 
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>

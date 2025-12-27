@@ -13,6 +13,7 @@ import TrafficChart from "../Components/TrafficChart";
 import ErrorChart from "../Components/ErrorChart";
 import Header from "../Components/Header";
 import UserManagement from "../Components/UserManagement";
+import Sidebar from "../Components/Sidebar";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
@@ -111,81 +112,53 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex-col min-h-screen bg-slate-100 px-6 py-6">
-  <div className="max-w-7xl mx-auto space-y-6">
-    
-    <Header />
+    <div className="min-h-screen flex flex-col bg-blue-950 text-gray-200">
+      {/* Sidebar */}
+      <div>
+        <Header />
+      </div>
+      <div className="flex flex-1">
+        <Sidebar tab={tab} setTab={setTab} role={role} />
 
-    {/* Navigation */}
-    <div className="flex gap-6 ">
-      <button onClick={() => setTab("overview")} className="px-4 py-2 bg-gray-200 rounded">Overview</button>
-      <button onClick={() => setTab("logs")} className="px-4 py-2 bg-gray-200 rounded">Logs</button>
-      <button onClick={() => setTab("charts")} className="px-4 py-2 bg-gray-200 rounded">Charts</button>
+        {/* Main Content */}
+        <main className="flex-1 p-6 overflow-y-auto">
+          {/* OVERVIEW */}
+          {tab === "overview" && (
+            <>
+              <MetricsCards data={overview} />
+            </>
+          )}
 
-      {role === "admin" && (
-        <button onClick={() => setTab("users")} className="px-4 py-2 bg-gray-200 rounded">
-          User Management
-        </button>
-      )}
+          {/* LOGS */}
+          {tab === "logs" && (
+            <>
+              <MetricsCards data={overview} />
+              <LogsTable logs={logs} />
+              <AlertBanner alerts={alerts} />
+            </>
+          )}
+
+          {/* CHARTS */}
+          {tab === "charts" && (
+            <>
+              <MetricsCards data={overview} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TrafficChart data={traffic} />
+                <ErrorChart data={errors} />
+              </div>
+            </>
+          )}
+
+          {/* USER MANAGEMENT (ADMIN ONLY) */}
+          {tab === "users" && role === "admin" && (
+            <>
+              <MetricsCards data={overview} />
+              <UserManagement />
+            </>
+          )}
+        </main>
+      </div>
     </div>
-
-    {/* Content */}
-    {/* {tab === "overview" && (
-      <>
-        <MetricsCards data={overview} />
-      </>
-    )} */}
-    <MetricsCards data={overview} />
-    {tab === "logs" && <LogsTable logs={logs} />}
-
-    {tab === "charts" && (
-      <>
-        <TrafficChart data={traffic} />
-        <ErrorChart data={errors} />
-      </>
-    )}
-
-    {tab === "users" && role === "admin" && (
-      <UserManagement />
-    )}
-  </div>
-</div>
-
-  //   <div className="min-h-screen bg-slate-100 px-6 py-6">
-  //     <div className="max-w-7xl mx-auto space-y-6">
-  //       {/* {role === "admin" && <UserManagement />} */}
-  //       <Header />
-  //         {role === "admin" && (
-  //   <button onClick={() => setTab("users")}>
-  //     User Management
-  //   </button>
-  // )}
-  //       <MetricsCards data={overview} />
-  //       <LogsTable logs={logs} />
-  //       <AlertBanner alerts={alerts} />
-  //       <TrafficChart data={traffic} />
-  //       <ErrorChart data={errors} />
-  //       {/* Header */}
-  //       {/* Metrics */}
-  //       {/* Charts */}
-  //       {/* Logs */}
-  //     </div>
-  //   </div>
-
-    // <div className="min-h-screen bg-gray-100 p-8">
-    //   <h2 className="text-2xl font-bold mb-6">InsightBoard Dashboard</h2>
-
-    //   <MetricsCards data={overview} />
-
-    //   <div className="mt-6">
-    //     <LogsTable logs={logs} />
-    //   </div>
-    //   <AlertBanner alerts={alerts} />
-    //   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    //     <TrafficChart data={traffic} />
-    //     <ErrorChart data={errors} />
-    //   </div>
-    // </div>
   );
 };
 

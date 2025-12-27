@@ -1,7 +1,7 @@
 
-import AddUser from "./AddUser";
+
 import UserList from "./UserList";
-import { useState } from "react";
+
 
 const UserManagement = () => {
   

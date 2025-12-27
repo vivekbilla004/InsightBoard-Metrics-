@@ -50,10 +50,10 @@ const UserList = () => {
     <div className="bg-white rounded-xl shadow-sm border mt-6">
       {/* Header */}
       <div className="p-6 border-b">
-        <div className="p-6 border-b flex justify-between items-center">
-          <div>
+        <div className="p-4 border-b flex justify-between items-center">
+          <div className="text-black">
             <h2 className="text-xl font-semibold">User Management</h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="font-normal text-gray-500 mt-1">
               Manage users, assign roles, and control access.
             </p>
           </div>
@@ -71,13 +71,13 @@ const UserList = () => {
           <input
             type="text"
             placeholder="Search users..."
-            className="border px-3 py-2 rounded-md text-sm w-64"
+            className="border text-gray-800 px-3 py-2 rounded-md text-sm w-64"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <select
-            className="border px-3 py-2 rounded-md text-sm"
+            className="border text-gray-800 px-3 py-2 rounded-md text-sm"
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
           >
@@ -91,7 +91,7 @@ const UserList = () => {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-gray-600">
+          <thead className="bg-slate-50 text-gray-800">
             <tr>
               <th className="px-6 py-3 text-left">Name</th>
               <th className="px-6 py-3 text-left">Email</th>
@@ -104,7 +104,7 @@ const UserList = () => {
 
           <tbody>
             {filteredUsers.map((u) => (
-              <tr key={u._id} className="border-t hover:bg-gray-50 transition">
+              <tr key={u._id} className="border-t hover:bg-gray-50 transition text-gray-800">
                 <td className="px-6 py-4 font-medium">{u.name}</td>
                 <td className="px-6 py-4 text-gray-600">{u.email}</td>
                 <td className="px-6 py-4 capitalize">{u.role}</td>
