@@ -131,6 +131,28 @@ const UserList = () => {
                   >
                     Delete
                   </button>
+                  <button
+  onClick={async () => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/users/${u._id}/reset-password`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = await res.json();
+    alert(`New temporary password: ${data.tempPassword}`);
+  }}
+  className="text-orange-500 hover:underline"
+>
+  Reset Password
+</button>
+
                 </td>
               </tr>
             ))}

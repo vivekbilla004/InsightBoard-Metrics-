@@ -130,7 +130,7 @@ const Dashboard = () => {
           )}
 
           {/* LOGS */}
-          {tab === "logs" && (
+          {tab === "logs" && role === "admin" && (
             <>
               <MetricsCards data={overview} />
               <LogsTable logs={logs} />

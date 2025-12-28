@@ -21,12 +21,11 @@ const Sidebar = ({ tab, setTab, role }) => {
           Overview
         </button>
 
-        <button
-          className={itemClass("logs")}
-          onClick={() => setTab("logs")}
-        >
-          Logs
-        </button>
+        {role === "admin" && (
+          <button className={itemClass("logs")} onClick={() => setTab("logs")}>
+            Logs
+          </button>
+        )}
 
         <button
           className={itemClass("charts")}

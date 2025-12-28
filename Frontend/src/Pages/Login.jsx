@@ -1,22 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/auth/login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      }
-    );
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
     const data = await res.json();
 
@@ -27,6 +26,15 @@ const Login = () => {
 
     localStorage.setItem("token", data.token);
     localStorage.setItem("role", data.role);
+
+    // 🔐 FORCE PASSWORD CHANGE (THIS IS THE LINE YOU ASKED ABOUT)
+    if (data.forcePasswordChange) {
+      navigate("/change-password");
+      return;
+    }
+
+    // ✅ normal login
+    navigate("/");
 
     window.location.href = "/";
   };
@@ -45,9 +53,7 @@ const Login = () => {
         </p>
 
         {error && (
-          <p className="text-sm text-red-600 bg-red-50 p-2 rounded">
-            {error}
-          </p>
+          <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>
         )}
 
         <div>

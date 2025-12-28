@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const { protect } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -26,35 +27,52 @@ router.post("/login", async (req, res) => {
     { expiresIn: "1d" }
   );
 
+  const forcePasswordChange = user.mustChangePassword && user.role !== "admin";
+
   res.json({
     token,
     role: user.role,
+    forcePasswordChange,
   });
+});
+
+// Change password route
+router.post("/change-password", protect, async (req, res) => {
+  const { newPassword } = req.body;
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+
+  await User.findByIdAndUpdate(req.user.id, {
+    password: hashed,
+    mustChangePassword: false,
+  });
+
+  res.json({ message: "Password updated successfully" });
 });
 
 // Register route - only allows developer role registration
-router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+// router.post("/register", async (req, res) => {
+//   const { name, email, password } = req.body;
 
-  // prevent duplicate users
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ message: "User already exists" });
-  }
+//   // prevent duplicate users
+//   const existingUser = await User.findOne({ email });
+//   if (existingUser) {
+//     return res.status(400).json({ message: "User already exists" });
+//   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+//   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-    role: "developer", // 🔒 force developer role
-  });
+//   const user = await User.create({
+//     name,
+//     email,
+//     password: hashedPassword,
+//     role: "developer", // 🔒 force developer role
+//   });
 
-  res.status(201).json({
-    message: "Account created successfully",
-  });
-});
+//   res.status(201).json({
+//     message: "Account created successfully",
+//   });
+// });
 
 // Seed an admin user (for testing purposes)
 router.post("/seed-admin", async (req, res) => {
@@ -72,6 +90,8 @@ router.post("/seed-admin", async (req, res) => {
     email: "admin@insightboard.com",
     password: hashedPassword,
     role: "admin",
+    mustChangePassword: false,
+    status: "Active",
   });
 
   res.json({

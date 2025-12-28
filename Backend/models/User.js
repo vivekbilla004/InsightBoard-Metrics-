@@ -23,7 +23,10 @@ const UserSchema = new mongoose.Schema(
       enum: ["Active", "Suspended"],
       default: "Active",
     },
-  },
+    mustChangePassword: {
+  type: Boolean,
+  default: true
+}  },
   { timestamps: true }
 );
 

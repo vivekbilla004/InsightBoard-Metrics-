@@ -3,6 +3,7 @@ const User = require("../models/User");
 const { protect, restrictTo } = require("../middleware/auth");
 const bcrypt = require("bcryptjs"); 
 const router = express.Router();
+const generatePassword = require("../utils/generatePassword");
 
 // Get all users (admin only)
 router.get(
@@ -29,26 +30,27 @@ router.post(
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const password = "dev123"; // default password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const tempPassword = generatePassword(); //generate random
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
     const user = await User.create({
       name,
       email,
       role,
       title,
-      password: hashedPassword
+      password: hashedPassword,
+      mustChangePassword: true,
+      status: "Active"
     });
 
     res.json({
-      message: "User created successfully",
+      message: "User created",
       email: user.email,
-      role: user.role,
-      title: user.title,
-      tempPassword: password
+      tempPassword // shown ONCE
     });
   }
 );
+
 
 // Update user (admin only)
 router.put(
@@ -131,5 +133,27 @@ router.get(
     });
   }
 );
+
+// Reset user password (admin only)
+router.post(
+  "/:id/reset-password",
+  protect,
+  restrictTo("admin"),
+  async (req, res) => {
+    const tempPassword = generatePassword();
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+    await User.findByIdAndUpdate(req.params.id, {
+      password: hashedPassword,
+      mustChangePassword: true
+    });
+
+    res.json({
+      message: "Password reset",
+      tempPassword
+    });
+  }
+);
+
 
 module.exports = router;
