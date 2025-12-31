@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ChangePassword from "./Components/ChangePassword";
+import ApiMonitor from "./Pages/ApiMonitor";
+import ApiDetails from "./Pages/ApiDetails";
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/api-monitor" element={<ApiMonitor />} />
+            <Route path="/api-monitor/:apiId" element={<ApiDetails />} />
             <Route
               path="/"
               element={

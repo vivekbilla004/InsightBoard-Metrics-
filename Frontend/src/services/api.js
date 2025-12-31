@@ -35,3 +35,35 @@ export const fetchErrors = async () => {
     headers: getAuthHeaders()
   }).then(res => res.json());
 };
+
+// API Monitor
+export const getMonitoredApis = async () => {
+  const res = await fetch(`${BASE_URL}/api/monitor`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch monitored APIs");
+  }
+
+  return res.json();
+};
+
+// API Summary
+export const getApiSummary = async (apiId) => {
+  const res = await fetch(`${BASE_URL}/api/monitor/${apiId}/summary`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch API summary");
+  }
+
+  return res.json();
+};
+
+// API Metrics
+export const getApiMetrics = async (apiId) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/monitor/${apiId}/metrics`
+  );
+
+  if (!res.ok) throw new Error("Failed to fetch metrics");
+  return res.json();
+};

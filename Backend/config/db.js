@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+const { startApiMonitoring } = require("../cron/apiMonitor.cron");
 MONGO_URL = "mongodb://127.0.0.1:27017/insightboard";
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL);
     console.log("MongoDB Connected");
+    startApiMonitoring();
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
     process.exit(1);

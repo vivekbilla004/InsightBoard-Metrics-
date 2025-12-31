@@ -10,9 +10,12 @@ const logsRoute = require("./routes/logs");
 const metricsRoute = require("./routes/metrics");
 const authRoute = require("./routes/auth");
 const usersRoute = require("./routes/users");
+// const { startApiMonitoring } = require("./cron/apiMonitor.cron");
+const apiMonitorRoutes = require("./routes/apiMonitor");
 
 dotenv.config();
 connectDB();
+// startApiMonitoring();
 
 const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -67,6 +70,9 @@ app.use("/api/auth", authRoute);
 
 // users route
 app.use("/api/users", usersRoute);
+
+// API Monitor routes
+app.use("/api/monitor", apiMonitorRoutes);
 
 // socket connection
 io.on("connection", (socket) => {

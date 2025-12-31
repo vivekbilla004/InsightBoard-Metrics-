@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Sidebar = ({ tab, setTab, role }) => {
   const itemClass = (name) =>
     `w-full  text-left font-medium px-4 py-2 rounded-md text-sm transition
@@ -42,6 +44,9 @@ const Sidebar = ({ tab, setTab, role }) => {
             User Management
           </button>
         )}
+        <button className={itemClass("api-monitor")}>
+          <Link to="/api-monitor">API Monitor</Link>
+        </button>
       </nav>
     </aside>
   );
