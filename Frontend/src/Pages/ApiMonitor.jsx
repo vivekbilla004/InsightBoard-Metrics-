@@ -64,38 +64,41 @@ const ApiMonitor = () => {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="bg-blue-950 h-screen pb-10">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">API Monitor</h1>
+      <div className="mb-6 h-20 bg-[#1f2228]">
+        <h1 className="text-2xl text-center p-5 font-bold text-white">
+          API Monitor
+        </h1>
       </div>
 
       {/* ✅ Add API Form — CORRECT PLACE */}
       <AddApiForm onAdd={loadApis} />
 
-      {/* Error state */}
-      {/* {error && <p className="text-red-500 mb-4">{error}</p>} */}
-
+      {/* Loading state */}
       {/* Loading state */}
       {loading ? (
-        <p>Loading APIs...</p>
+        <p className="text-center text-white">Loading APIs...</p>
       ) : (
-        <table className="w-full border border-gray-700 overflow-y-auto">
-          <thead className="bg-red-50">
-            <tr>
-              <th className="p-2 text-left">Name</th>
-              <th className="p-2 text-left">URL</th>
-              <th className="p-2 text-left">Status</th>
-              <th className="p-2 text-left">Latency</th>
-              <th className="p-2 text-left">Uptime</th>
-            </tr>
-          </thead>
-          <tbody>
-            {apis.map((api) => (
-              <ApiRow key={api._id} api={api} />
-            ))}
-          </tbody>
-        </table>
+        <div className="max-h-96 overflow-y-auto mx-auto w-[90%] rounded-2xl border border-gray-700 bg-white">
+          <table className="w-full border-collapse">
+            <thead className="bg-red-50 sticky top-0 z-10">
+              <tr>
+                <th className="p-2 text-left">Name</th>
+                <th className="p-2 text-left">URL</th>
+                <th className="p-2 text-left">Status</th>
+                <th className="p-2 text-left">Latency</th>
+                <th className="p-2 text-left">Availability</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {apis.map((api) => (
+                <ApiRow key={api._id} api={api} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

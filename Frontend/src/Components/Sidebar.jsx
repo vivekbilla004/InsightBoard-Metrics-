@@ -44,7 +44,8 @@ const Sidebar = ({ tab, setTab, role }) => {
             User Management
           </button>
         )}
-        <button className={itemClass("api-monitor")}>
+
+        <button className={itemClass("")}>
           <Link to="/api-monitor">API Monitor</Link>
         </button>
       </nav>

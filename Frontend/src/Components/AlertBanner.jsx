@@ -3,11 +3,11 @@ const AlertBanner = ({ alerts }) => {
   if (!alerts.length) return null;
 
   return (
-    <div className="mb-6 space-y-2">
+    <div className="mb-6 mt-2 space-y-2">
       {alerts.map((alert, index) => (
         <div
           key={index}
-          className={`p-4 rounded text-white ${
+          className={`p-4 rounded-xl text-white ${
             alert.severity === "critical"
               ? "bg-red-600"
               : "bg-yellow-500"

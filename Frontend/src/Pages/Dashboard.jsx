@@ -35,7 +35,7 @@ const Dashboard = () => {
       try {
         const overviewData = await fetchOverview();
         const logsData = await fetchLogs();
-
+        console.log("Initial logs data:", logsData);
         setOverview(overviewData);
 
         // ✅ only set logs if socket hasn't updated yet

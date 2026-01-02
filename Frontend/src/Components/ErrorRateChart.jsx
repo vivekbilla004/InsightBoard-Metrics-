@@ -7,7 +7,14 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-const ErrorRateChart = ({ data }) => {
+const ErrorRateChart = ({ data = [] }) => {
+    if (data.length === 0) {
+    return (
+      <div className="bg-gray-900 p-4 rounded h-80 flex items-center justify-center text-gray-400">
+        No failure data yet
+      </div>
+    );
+  }
   const formatted = data.map((m, i) => ({
     index: i,
     success: m.success ? 1 : 0,

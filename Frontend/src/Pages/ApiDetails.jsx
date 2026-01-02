@@ -1,51 +1,71 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { getApiSummary } from "../services/api";
 import { getApiMetrics } from "../services/api";
 import LatencyChart from "../Components/LatencyChart";
 import ErrorRateChart from "../Components/ErrorRateChart";
+import { useNavigate } from "react-router-dom";
 
 const ApiDetails = () => {
   const { apiId } = useParams();
-  const [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [metrics, setMetrics] = useState(null);
+  const [error, setError] = useState(null);
+  const [metrics, setMetrics] = useState([]);
+  const previousStatusRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Fetch API Summary
   useEffect(() => {
-    const loadSummary = async () => {
-      const data = await getApiSummary(apiId);
-      console.log("API Summary:", data);
-      setSummary(data);
-      setLoading(false);
+    const loadData = async () => {
+      const [summaryData, metricsData] = await Promise.all([
+        getApiSummary(apiId),
+        getApiMetrics(apiId),
+      ]);
+      console.log("Loaded summary data:", summaryData);
+      console.log("Loaded metrics data:", metricsData);
+      previousStatusRef.current = summary?.status || null;
+
+      setSummary(summaryData);
+      setMetrics(metricsData);
     };
 
-    loadSummary();
+    loadData(); // initial load
+    // const interval = setInterval(loadData, 10000); // refresh
+
+    // return () => clearInterval(interval);
   }, [apiId]);
 
-  // Fetch API Metrics
-  useEffect(() => {
-    const loadMetrics = async () => {
-      const data = await getApiMetrics(apiId);
-      console.log("📊 metrics data:", data);
-      setMetrics(data);
-    };
+  if (error) {
+    return <div className="p-6 text-red-500">{error}</div>;
+  }
 
-    loadMetrics();
-  }, [apiId]);
-
-  if (loading) return <p className="p-6">Loading API details...</p>;
+  // Show message if no metrics yet
+  {
+    Array.isArray(metrics) && metrics.length === 0 && !loading && (
+      <p className="text-gray-400 mt-4">Waiting for first health check…</p>
+    );
+  }
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4 text-shadow-white">
-        API Performance
-      </h2>
+    <div className="p-6 bg-yellow-50 h-screen pb-10">
+      <div className="flex w-full bg-blue-950 mb-4 rounded-lg gap-3 justify-center p-4 ">
+        <h2 className="text-xl font-bold text-white ">API PERFORMANCE</h2>
+        <button className="w-20 bg-white rounded-lg font-bold" onClick={() => navigate(-1)}>Back</button>
+        <button className="w-20 bg-white rounded-lg font-bold" onClick={() => navigate('/')}>Home</button>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-white">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-white">
         <Stat label="Avg Latency" value={`${summary.avgLatency} ms`} />
-        <Stat label="Uptime" value={`${summary.uptime}%`} />
+        <Stat label="Availability" value={`${summary.uptime}%`} />
         <Stat label="Error Rate" value={`${summary.errorRate}%`} />
+
+        <Stat
+          label="Last Checked"
+          value={
+            summary.lastCheckedAt &&
+            new Date(summary.lastCheckedAt).toLocaleString()
+          }
+        />
       </div>
 
       {/* Charts will go here next */}
@@ -53,6 +73,15 @@ const ApiDetails = () => {
         <LatencyChart data={metrics} />
         <ErrorRateChart data={metrics} />
       </div>
+
+      {previousStatusRef.current &&
+        summary &&
+        previousStatusRef.current !== summary.status && (
+          <div className="bg-yellow-900 text-yellow-200 p-3 rounded mb-4">
+            Status changed from <strong>{previousStatusRef.current}</strong> to{" "}
+            <strong>{summary.status}</strong>
+          </div>
+        )}
     </div>
   );
 };

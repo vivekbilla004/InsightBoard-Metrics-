@@ -15,8 +15,22 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/api-monitor" element={<ApiMonitor />} />
-            <Route path="/api-monitor/:apiId" element={<ApiDetails />} />
+            <Route
+              path="/api-monitor"
+              element={
+                <ProtectedRoute>
+                  <ApiMonitor />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/api-monitor/:apiId"
+              element={
+                <ProtectedRoute>
+                  <ApiDetails />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/"
               element={
