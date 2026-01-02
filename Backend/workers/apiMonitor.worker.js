@@ -8,16 +8,15 @@ const { calculateHealthStatus } = require("../utils/healthCalculator");
  * Poll all registered APIs and store metrics
  */
 const pollApis = async () => {
-      console.log("🟡 Worker started polling APIs");        
+  console.log("🟡 Worker started polling APIs");
   const apis = await MonitoredApi.find();
-   console.log("🟢 APIs found:", apis.length);
+  console.log("🟢 APIs found:", apis.length);
   for (const api of apis) {
     console.log("🔵 Polling:", api.url);
     const startTime = Date.now();
 
     try {
       const response = await axios({
-        
         url: api.url,
         method: api.method || "GET",
         headers: api.headers || {},
@@ -28,16 +27,14 @@ const pollApis = async () => {
       const responseTime = Date.now() - startTime;
 
       await ApiMetric.create({
-        
         apiId: api._id,
         responseTime,
         statusCode: response.status,
         success: true,
-        
-      })
-      console.log("📊 Metric saved");;
+      });
+      console.log("📊 Metric saved");
     } catch (error) {
-        console.log("❌ API failed:", error.message);
+      console.log("❌ API failed:", error.message);
       const responseTime = Date.now() - startTime;
 
       await ApiMetric.create({
@@ -54,8 +51,12 @@ const pollApis = async () => {
       .sort({ createdAt: -1 })
       .limit(20);
 
+    const previousStatus = api.status;
     const health = calculateHealthStatus(recentMetrics);
 
+    if (previousStatus !== health) {
+      console.log(`🚨 API ${api.name} changed: ${previousStatus} → ${health}`);
+    }
     api.status = health;
     await api.save();
   }

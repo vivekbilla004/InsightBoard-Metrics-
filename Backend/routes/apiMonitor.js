@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
   const api = await MonitoredApi.create({
     name: name || "New API",
     url,
-    method: "GET",
+    method: req.body.method || "GET",
     status: "INITIALIZING",
   });
 
@@ -45,6 +45,7 @@ router.get("/:apiId/summary", async (req, res) => {
   const { apiId } = req.params;
 
   const metrics = await ApiMetric.find({ apiId });
+  const lastMetric = metrics[metrics.length - 1];
 
   if (!metrics.length) {
     return res.json({
@@ -70,6 +71,7 @@ router.get("/:apiId/summary", async (req, res) => {
     errorRate: Number(errorRate.toFixed(2)),
     uptime: Number(uptime.toFixed(2)),
     totalRequests: total,
+    lastCheckedAt: lastMetric?.createdAt || null
   });
 });
 
