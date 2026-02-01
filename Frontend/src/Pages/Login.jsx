@@ -81,6 +81,37 @@ const Login = () => {
         >
           Login
         </button>
+        <div className="mt-6 p-4 bg-gray-900 rounded border border-gray-700">
+          <p className="text-sm text-gray-300 font-semibold mb-2">
+            Demo Access
+          </p>
+
+          <p className="text-xs text-gray-400 mb-3">
+            Use the demo account below to explore all monitoring features. You
+            can add APIs, track performance, and view status changes.
+          </p>
+
+          <div className="text-xs text-gray-400 mb-3">
+            <div>
+              Email:{" "}
+              <span className="text-gray-200">admin@insightboard.com</span>
+            </div>
+            <div>
+              Password: <span className="text-gray-200">admin123</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setEmail("admin@insightboard.com");
+              setPassword("admin123");
+            }}
+            className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded text-sm"
+          >
+            Use Demo Credentials
+          </button>
+        </div>
       </form>
     </div>
   );
